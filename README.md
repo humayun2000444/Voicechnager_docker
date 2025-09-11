@@ -14,7 +14,7 @@ This repository contains a Docker setup for FreeSWITCH 1.10.11 on Ubuntu 22.04.
 ```bash
 git clone https://github.com/AkibHossainOmi/Freeswitch-Docker.git
 cd Freeswitch-Docker
-````
+```
 
 2. **Build and start the container**:
 
@@ -26,18 +26,6 @@ docker-compose up --build -d
 
 ```bash
 docker logs -f freeswitch
-```
-
-4. **Connect to FreeSWITCH CLI**:
-
-```bash
-docker exec -it freeswitch fs_cli
-```
-
-5. **Stop the container**:
-
-```bash
-docker-compose down
 ```
 
 ## Configure Event Socket
@@ -74,6 +62,18 @@ vi /usr/local/freeswitch/conf/autoload_configs/event_socket.conf.xml
 ```bash
 docker-compose down
 docker-compose up -d
+```
+
+4. **Connect to FreeSWITCH CLI**:
+
+```bash
+docker exec -it freeswitch fs_cli
+```
+
+5. **Stop the container**:
+
+```bash
+docker-compose down
 ```
 
 ## Ports Exposed

@@ -12,8 +12,8 @@ This repository contains a Docker setup for FreeSWITCH 1.10.11 on Ubuntu 22.04.
 1. **Clone the repository**:
 
 ```bash
-git clone https://github.com/AkibHossainOmi/Freeswitch-Docker.git
-cd Freeswitch-Docker
+https://github.com/humayun2000444/Voicechnager_docker.git
+cd Voicechnager_docker
 ```
 
 2. **Build and start the container**:
@@ -36,41 +36,21 @@ docker logs -f freeswitch
 docker exec -it freeswitch /bin/bash
 ```
 
-2. Open the `event_socket.conf.xml` file. If `nano` is unavailable, use `vi`:
 
-```bash
-vi /usr/local/freeswitch/conf/autoload_configs/event_socket.conf.xml
-```
-
-3. Replace its contents with:
-
-```xml
-<configuration name="event_socket.conf" description="Socket Client">
-  <settings>
-    <param name="listen-ip" value="0.0.0.0"/>
-    <param name="listen-port" value="8021"/>
-    <param name="password" value="ClueCon"/>
-    <param name="apply-inbound-acl" value="lan"/>
-    <param name="tls" value="false"/>
-    <param name="ip-version" value="4"/>
-  </settings>
-</configuration>
-```
-
-4. Restart FreeSWITCH the container:
+2. For restarting FreeSWITCH the container:
 
 ```bash
 docker-compose down
 docker-compose up -d
 ```
 
-4. **Connect to FreeSWITCH CLI**:
+3. **Connect to FreeSWITCH CLI**:
 
 ```bash
 docker exec -it freeswitch fs_cli
 ```
 
-5. **Stop the container**:
+4. **Stop the container**:
 
 ```bash
 docker-compose down
@@ -81,8 +61,8 @@ docker-compose down
 * `5060` TCP/UDP: SIP
 * `5080` TCP/UDP: SIP alternative
 * `8021` TCP: Event Socket
+* `8080` ESL Client
 
 ## Notes
 
 * FreeSWITCH runs as a non-root user inside the container.
-* Make sure `mod_event_socket` is loaded for the event socket to work.

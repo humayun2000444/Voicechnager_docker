@@ -2,23 +2,30 @@
 set -e
 
 # ---------------------------
-# Ensure ownership
+# Configure Event Socket
 # ---------------------------
+cat > /usr/local/freeswitch/conf/autoload_configs/event_socket.conf.xml <<EOL
+<configuration name="event_socket.conf" description="Socket Client">
+  <settings>
+    <param name="listen-ip" value="0.0.0.0"/>
+    <param name="listen-port" value="8021"/>
+    <param name="password" value="ClueCon"/>
+    <param name="apply-inbound-acl" value="lan"/>
+    <param name="tls" value="false"/>
+    <param name="ip-version" value="4"/>
+  </settings>
+</configuration>
+EOL
+
 chown -R freeswitch:freeswitch /usr/local/freeswitch
 
-# ---------------------------
-# Add mod_voicechanger to modules.conf.xml if missing
-# ---------------------------
 MOD_CONF="/usr/local/freeswitch/conf/autoload_configs/modules.conf.xml"
 if ! grep -q "mod_voicechanger" "$MOD_CONF"; then
     sed -i '/<modules>/a \ \ <load module="mod_voicechanger"/>' "$MOD_CONF"
 fi
 
-# ---------------------------
-# Verify module file exists
-# ---------------------------
 if [ ! -f /usr/local/freeswitch/mod/mod_voicechanger.so ]; then
-    echo "ERROR: mod_voicechanger.so not found in /usr/local/freeswitch/mod/"
+    echo "ERROR: mod_voicechanger.so not found"
     exit 1
 fi
 
@@ -27,18 +34,25 @@ fi
 # ---------------------------
 /usr/sbin/freeswitch -u freeswitch -g freeswitch -nonat &
 
-# Wait for FreeSWITCH to fully start
 sleep 30
-
-# Load mod_voicechanger via fs_cli
 fs_cli -x "load mod_voicechanger"
 
 # ---------------------------
-# Start Spring Boot backend inside screen
+# Start Spring Boot inside screen
 # ---------------------------
-screen -dmS springboot bash -c "java -jar /usr/local/src/VoicechnagerBackend/target/VoicechnagerBackend-1.0-SNAPSHOT.jar"
+JAR_FILE=$(ls /usr/local/src/VoicechnagerBackend/target/*.jar | head -n 1)
+if [ ! -f "$JAR_FILE" ]; then
+    echo "ERROR: Spring Boot JAR not found!"
+    exit 1
+fi
+
+# Start screen session named 'springboot'
+screen -dmS springboot java -jar "$JAR_FILE"
+
+echo "Spring Boot started in screen session 'springboot'."
+echo "Attach with: screen -r springboot"
 
 # ---------------------------
-# Keep container alive (attach to FreeSWITCH process)
+# Keep container alive
 # ---------------------------
-wait
+tail -f /dev/null

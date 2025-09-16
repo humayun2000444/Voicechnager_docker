@@ -4,7 +4,7 @@ services:
     build: .
     cap_add:
       - SYS_NICE
-    container_name: freeswitch
+    container_name: Voice_freeswitch
     restart: always
     ports:
       - "5060:5060/udp"

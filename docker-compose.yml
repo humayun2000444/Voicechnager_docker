@@ -7,9 +7,17 @@ services:
     container_name: Voice_freeswitch
     restart: always
     ports:
+      # SIP signaling
       - "5060:5060/udp"
       - "5060:5060/tcp"
       - "5080:5080/udp"
       - "5080:5080/tcp"
+
+      # ESL (Event Socket Library)
       - "8021:8021"
+
+      # Web (if you have FS console GUI / http cache)
       - "8080:8080"
+
+      # RTP media (required for audio)
+      - "16384-32768:16384-32768/udp"

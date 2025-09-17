@@ -1,3 +1,25 @@
+# version: "3.8"
+# services:
+#   freeswitch:
+#     build: .
+#     cap_add:
+#       - SYS_NICE
+#     container_name: Voice_freeswitch
+#     restart: always
+#     ports:
+#       # SIP signaling
+#       - "5060:5060/udp"
+#       - "5060:5060/tcp"
+#       - "5080:5080/udp"
+#       - "5080:5080/tcp"
+
+#       # ESL (Event Socket Library)
+#       - "8021:8021"
+
+#       # Web (if you have FS console GUI / http cache)
+#       - "8080:8080"
+
+
 version: "3.8"
 services:
   freeswitch:
@@ -7,14 +29,16 @@ services:
     container_name: Voice_freeswitch
     restart: always
     ports:
-      # SIP signaling
-      - "5060:5060/udp"
-      - "5060:5060/tcp"
+      # Internal SIP on 52318
+      - "52318:52318/udp"
+      - "52318:52318/tcp"
+
+      # External SIP on 5080
       - "5080:5080/udp"
       - "5080:5080/tcp"
 
-      # ESL (Event Socket Library)
+      # ESL
       - "8021:8021"
 
-      # Web (if you have FS console GUI / http cache)
+      # Web (if needed)
       - "8080:8080"
